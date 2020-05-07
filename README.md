@@ -106,7 +106,7 @@ The `useGoogleSheets` hook takes an object with three properties:
 - `sheetId` is the id of the sheet.
 - `sheetsNames` is an array of specific sheet names. Can be left out then it will fallback to all sheets inside the spreadsheet.
 
-### ExposedData
+### Exposed Data
 
 The hook produces an `HookState` object:
 
