@@ -3,19 +3,19 @@ import * as React from 'react';
 import { mapData, makeFetch } from './utils';
 import {
   HookOptions,
-  AppState,
+  HookState,
   ActionTypes,
   Action,
   SheetsResponse,
 } from './types';
 
-const initialState: AppState = {
+const initialState: HookState = {
   loading: false,
-  error: false,
+  error: null,
   data: [],
 };
 
-function reducer(state: AppState, action: Action): AppState {
+function reducer(state: HookState, action: Action): HookState {
   switch (action.type) {
     case ActionTypes.loading:
       return { ...state, loading: action.payload };
@@ -32,7 +32,7 @@ const useGoogleSheets = ({
   apiKey,
   sheetId,
   sheetsNames = [],
-}: HookOptions): AppState => {
+}: HookOptions): HookState => {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}&includeGridData=true&fields=sheets(data%2FrowData%2Fvalues%2FformattedValue%2Cproperties%2Ftitle)`;
   const [state, dispatch] = React.useReducer(reducer, initialState);
 

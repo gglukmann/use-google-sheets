@@ -14,9 +14,9 @@ export interface Sheet {
   id: string;
   data: Array<object>;
 }
-export interface AppState {
+export interface HookState {
   loading: boolean;
-  error: boolean | string;
+  error: null | object;
   data: Sheet[];
 }
 export enum ActionTypes {
@@ -25,6 +25,6 @@ export enum ActionTypes {
   success = 'SUCCESS',
 }
 export type Action =
-  | { type: ActionTypes.loading; payload: AppState['loading'] }
-  | { type: ActionTypes.error; payload: AppState['error'] }
-  | { type: ActionTypes.success; payload: AppState['data'] };
+  | { type: ActionTypes.loading; payload: HookState['loading'] }
+  | { type: ActionTypes.error; payload: HookState['error'] }
+  | { type: ActionTypes.success; payload: HookState['data'] };

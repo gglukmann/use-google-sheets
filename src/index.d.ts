@@ -1,7 +1,7 @@
-import { HookOptions, AppState } from './types';
+import { HookOptions, HookState } from './types';
 
 export default function useGoogleSheets({
   apiKey,
   sheetId,
   sheetsNames,
-}: HookOptions): AppState;
+}: HookOptions): HookState;

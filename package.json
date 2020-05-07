@@ -1,7 +1,7 @@
 {
   "name": "use-google-sheets",
   "author": "Gert Glükmann",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "MIT",
   "module": "dist/use-google-sheets.esm.js",
   "main": "dist/index.js",

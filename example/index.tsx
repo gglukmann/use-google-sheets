@@ -7,12 +7,7 @@ import useGoogleSheets from '../.';
 const REACT_APP_GOOGLE_API_KEY = '';
 const REACT_APP_GOOGLE_SHEETS_ID = '';
 
-const sheetsNames = [
-  'Overall Config',
-  'Page Translations',
-  'Questions',
-  'Submitted Results',
-];
+const sheetsNames = ['Sheet1'];
 
 const App = () => {
   const { data, loading, error } = useGoogleSheets({
