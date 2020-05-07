@@ -32,7 +32,7 @@ UMD build available on [unpkg](https://www.unpkg.com/browse/use-google-sheets@1.
 4. Get sheet id from url of the sheet.
 
 ```html
-https://docs.google.com/spreadsheets/d/[THIS-IS-THE-DOC-ID]/
+https://docs.google.com/spreadsheets/d/[THIS-IS-THE-SHEET-ID]/
 ```
 
 5. I suggest adding API key and sheet id to `.env` file
