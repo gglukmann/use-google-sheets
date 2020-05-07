@@ -10,7 +10,7 @@ import {
 } from './types';
 
 const initialState: HookState = {
-  loading: false,
+  loading: true,
   error: null,
   data: [],
 };
@@ -39,8 +39,6 @@ const useGoogleSheets = ({
 
   React.useEffect(() => {
     async function fetchData() {
-      dispatch({ type: ActionTypes.loading, payload: true });
-
       try {
         const response: SheetsResponse = await makeFetch(url);
 
