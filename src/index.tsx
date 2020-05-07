@@ -35,6 +35,7 @@ const useGoogleSheets = ({
 }: HookOptions): HookState => {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}&includeGridData=true&fields=sheets(data%2FrowData%2Fvalues%2FformattedValue%2Cproperties%2Ftitle)`;
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  const [sheets] = React.useState(sheetsNames);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -45,7 +46,7 @@ const useGoogleSheets = ({
 
         dispatch({
           type: ActionTypes.success,
-          payload: mapData(response.sheets, sheetsNames),
+          payload: mapData(response.sheets, sheets),
         });
       } catch (error) {
         dispatch({ type: ActionTypes.error, payload: error });
@@ -55,7 +56,7 @@ const useGoogleSheets = ({
     }
 
     fetchData();
-  }, [sheetsNames, url]);
+  }, [sheets, url]);
 
   return {
     loading: state.loading,
