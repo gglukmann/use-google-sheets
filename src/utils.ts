@@ -5,13 +5,13 @@ export const makeFetch = async (url: string, config = {}) => {
     const response = await fetch(url, config);
 
     if (!response.ok) {
-      // throw new Error(response);
+      throw { statusText: response.statusText, status: response.status };
     }
 
     return await response.json();
   } catch (error) {
     console.error(error);
-    throw new Error(error);
+    throw error;
   }
 };
 
