@@ -14,9 +14,17 @@ export interface Sheet {
   id: string;
   data: Array<object>;
 }
+export interface ApiResponse {
+  url: string;
+  status: number;
+  statusText: string;
+}
+export interface ErrorResponse {
+  response: ApiResponse;
+}
 export interface HookState {
   loading: boolean;
-  error: null | object;
+  error: null | ErrorResponse;
   data: Sheet[];
 }
 export enum ActionTypes {

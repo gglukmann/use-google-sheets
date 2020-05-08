@@ -1,11 +1,29 @@
-import { HookOptions, SheetFromResponse, Sheet } from './types';
+import { HookOptions, SheetFromResponse, Sheet, ApiResponse } from './types';
+
+class ApiResponseError extends Error {
+  constructor(message: string, public readonly response: ApiResponse) {
+    super(message);
+    Object.setPrototypeOf(this, ApiResponseError.prototype);
+    this.response = response;
+    Error.captureStackTrace(this, ApiResponseError);
+  }
+}
 
 export const makeFetch = async (url: string, config = {}) => {
   try {
     const response = await fetch(url, config);
 
     if (!response.ok) {
-      throw { statusText: response.statusText, status: response.status };
+      throw new ApiResponseError(
+        `Request to '${url}' failed with ${response.status}${
+          response.statusText ? `: ${response.statusText}` : ''
+        }`,
+        {
+          status: response.status,
+          statusText: response.statusText,
+          url: response.url,
+        }
+      );
     }
 
     return await response.json();

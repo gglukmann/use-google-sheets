@@ -135,11 +135,12 @@ const { data, loading, error } = useGoogleSheets({ apiKey, sheetId });
 ```
 
 - `loading` lets you know whether data is being fetched and mapped.
-- `error` lets you know when there is something wrong. It returns an object with
+- `error` lets you know when there is something wrong. It returns an error object where you can get specific error properties from `error.response`
 
 ```js
 {
   status: '404',
   statusText: '',
+  url: 'https://sheets.googleapis.com/v4/spreadsheets/...',
 }
 ```
