@@ -1,7 +1,7 @@
 {
   "name": "use-google-sheets",
   "author": "Gert Glükmann <gglukmann@gmail.com>",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "repository": "github:gglukmann/use-google-sheets",
   "keywords": [
