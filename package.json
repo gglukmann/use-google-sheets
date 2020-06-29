@@ -4,6 +4,7 @@
   "version": "1.0.4",
   "license": "MIT",
   "repository": "github:gglukmann/use-google-sheets",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "keywords": [
 		"react",
     "hooks",
