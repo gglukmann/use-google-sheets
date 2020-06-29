@@ -1,18 +1,23 @@
 {
-  "name": "use-google-sheets",
+  "name": "@gglukmann/use-google-sheets",
   "author": "Gert Glükmann <gglukmann@gmail.com>",
   "version": "1.0.4",
   "license": "MIT",
-  "repository": "github:gglukmann/use-google-sheets",
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gglukmann/use-google-sheets"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/gglukmann"
+  },
   "keywords": [
-		"react",
+    "react",
     "hooks",
     "react-hooks",
     "google-sheets",
     "google-sheets-api",
     "google-sheets-api-v4"
-	],
+  ],
   "module": "dist/use-google-sheets.esm.js",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

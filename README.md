@@ -11,13 +11,13 @@
 Package can be added using **yarn**:
 
 ```bash
-yarn add use-google-sheets
+yarn add @gglukmann/use-google-sheets
 ```
 
 Or, use **NPM**:
 
 ```bash
-npm install use-google-sheets
+npm install @gglukmann/use-google-sheets
 ```
 
 UMD build available on [unpkg](https://www.unpkg.com/browse/use-google-sheets@1.0.0/dist/use-google-sheets.cjs.production.min.js).
