@@ -1,11 +1,20 @@
 {
   "name": "@gglukmann/use-google-sheets",
-  "author": "Gert Glükmann <gglukmann@gmail.com>",
+  "description": "### A React Hook for getting data from Google Sheets API v4",
   "version": "1.0.5",
+  "author": "Gert Glükmann <gglukmann@gmail.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gglukmann/use-google-sheets/issues"
+  },
+  "homepage": "https://github.com/gglukmann/use-google-sheets#readme",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gglukmann/use-google-sheets"
+    "url": "git+https://github.com/gglukmann/use-google-sheets.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/gglukmann"
