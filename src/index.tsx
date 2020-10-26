@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { mapData, makeFetch, getRanges } from './utils';
+import { mapData, makeFetch, getBatchUrl, getSheetsTitleUrl } from './utils';
 import {
   HookOptions,
   HookState,
@@ -16,8 +16,6 @@ const initialState: HookState = {
   error: null,
   data: [],
 };
-
-const GOOGLE_API_URL = 'https://sheets.googleapis.com/v4/spreadsheets';
 
 function reducer(state: HookState, action: Action): HookState {
   switch (action.type) {
@@ -35,31 +33,34 @@ function reducer(state: HookState, action: Action): HookState {
 const useGoogleSheets = ({
   apiKey,
   sheetId,
-  sheetsNames = [],
+  sheetsNames,
 }: HookOptions): HookState => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  const sheets = React.useRef(sheetsNames);
 
-  const fetchBatchData = async () => {
-    const ranges = getRanges(sheetsNames);
-    const url = `${GOOGLE_API_URL}/${sheetId}/values:batchGet?${ranges}&key=${apiKey}`;
+  const fetchBatchData = React.useCallback(async () => {
+    const url = getBatchUrl(sheetId, sheets.current, apiKey);
+
     return await makeFetch(url);
-  };
+  }, [apiKey, sheetId]);
 
-  const fetchOneByOneData = async () => {
-    const url = `${GOOGLE_API_URL}/${sheetId}?fields=sheets%2Fproperties%2Ftitle&key=${apiKey}`;
+  const fetchAllSheetsData = React.useCallback(async () => {
+    const url = getSheetsTitleUrl(sheetId, apiKey);
     const { sheets }: SheetsResponse = await makeFetch(url);
-    const ranges = getRanges(
+    const batchUrl = getBatchUrl(
+      sheetId,
       sheets.map((sheet: SheetFromResponse) => sheet.properties.title),
+      apiKey,
     );
-    const batchUrl = `${GOOGLE_API_URL}/${sheetId}/values:batchGet?${ranges}&key=${apiKey}`;
-    return await makeFetch(batchUrl);
-  };
 
-  const fetchData = async () => {
+    return await makeFetch(batchUrl);
+  }, [apiKey, sheetId]);
+
+  const fetchData = React.useCallback(async () => {
     try {
       const response: ValueRangesResponse =
-        sheetsNames.length === 0
-          ? await fetchOneByOneData()
+        sheets.current.length === 0
+          ? await fetchAllSheetsData()
           : await fetchBatchData();
 
       dispatch({
@@ -71,11 +72,11 @@ const useGoogleSheets = ({
     } finally {
       dispatch({ type: ActionTypes.loading, payload: false });
     }
-  };
+  }, [fetchBatchData, fetchAllSheetsData]);
 
   React.useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   return {
     loading: state.loading,
