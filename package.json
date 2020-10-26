@@ -1,7 +1,7 @@
 {
   "name": "@gglukmann/use-google-sheets",
   "description": "### A React Hook for getting data from Google Sheets API v4",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "Gert Glükmann <gglukmann@gmail.com>",
   "license": "MIT",
   "bugs": {
