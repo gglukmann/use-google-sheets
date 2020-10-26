@@ -1,4 +1,4 @@
-import { HookOptions, SheetFromResponse, Sheet, ApiResponse } from './types';
+import { HookOptions, Sheet, ApiResponse, ValueRange } from './types';
 
 class ApiResponseError extends Error {
   constructor(message: string, public readonly response: ApiResponse) {
@@ -22,7 +22,7 @@ export const makeFetch = async (url: string, config = {}) => {
           status: response.status,
           statusText: response.statusText,
           url: response.url,
-        }
+        },
       );
     }
 
@@ -33,56 +33,30 @@ export const makeFetch = async (url: string, config = {}) => {
   }
 };
 
-const mapHeader = (header: any) => {
-  return header.values.map(
-    (row: { formattedValue: string }) => row.formattedValue
-  );
-};
-
-const mapRecords = (records: any, headerData: any) => {
+const mapRecords = (
+  records: ValueRange['values'],
+  headerData: Array<string>,
+) => {
   return records
-    .filter((record: any) => Object.keys(record).length > 0)
-    .map((record: any) => {
-      let result = {};
-
-      headerData.forEach((value: string, index: number) => {
-        result = {
-          [value]: record.values?.[index]?.formattedValue || null,
-          ...result,
-        };
-      });
-
-      return result;
+    .filter((record: Array<string>) => record.length > 0)
+    .map((record: Array<string>) => {
+      return record.reduce(
+        (obj: any, item: string, index: number) => (
+          (obj[headerData[index]] = item), obj
+        ),
+        {},
+      );
     });
 };
 
-const filterSheets = (
-  sheets: Sheet[],
-  sheetNames: HookOptions['sheetsNames']
-): Sheet[] => {
-  let filteredSheets = sheets;
-
-  if (sheetNames.length > 0) {
-    filteredSheets = sheets.filter((sheet: Sheet) =>
-      sheetNames.includes(sheet.id)
-    );
-  }
-
-  return filteredSheets;
-};
-
-export const mapData = (
-  sheets: SheetFromResponse[],
-  sheetNames: HookOptions['sheetsNames']
-): Sheet[] => {
-  const result = sheets.map((sheet: SheetFromResponse) => {
-    const id = sheet.properties.title;
-    const rows = sheet.data[0].rowData;
+export const mapData = (sheets: ValueRange[]): Sheet[] => {
+  return sheets.map((sheet: ValueRange) => {
+    const id = sheet.range.split('!')[0].replace(/\'/g, '');
+    const rows = sheet.values || [];
 
     if (rows.length > 0) {
       const [header, ...records] = rows;
-      const headerData = mapHeader(header);
-      const recordsData = mapRecords(records, headerData);
+      const recordsData = mapRecords(records, header);
 
       return {
         id,
@@ -95,6 +69,9 @@ export const mapData = (
       data: [],
     };
   });
+};
 
-  return filterSheets(result, sheetNames);
+export const getRanges = (sheetNames: HookOptions['sheetsNames']): string => {
+  // ranges=Sheet1&ranges=Sheet2
+  return sheetNames.map((sheetName) => `ranges=${sheetName}`).join('&');
 };

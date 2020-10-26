@@ -4,9 +4,23 @@ export interface HookOptions {
   sheetsNames: Array<string>;
 }
 
+export interface ValueRange {
+  majorDimensions: string;
+  range: string;
+  values: Array<string[]>;
+}
+
+export interface ValueRangesResponse {
+  spreadsheetId: string;
+  valueRanges: Array<ValueRange>;
+}
+
+export interface PropertiesFromResponse {
+  title: string;
+}
+
 export interface SheetFromResponse {
-  properties: any;
-  data: Array<any>;
+  properties: PropertiesFromResponse;
 }
 
 export interface SheetsResponse {

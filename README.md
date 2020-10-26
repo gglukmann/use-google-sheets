@@ -1,6 +1,6 @@
 # useGoogleSheets
 
-## A React Hook for getting data from Google Sheets API v4
+## A React Hook for getting data from [Google Sheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values)
 
 [![Minified file size](https://img.badgesize.io/https://www.unpkg.com/use-google-sheets/dist/use-google-sheets.esm.js.svg)](https://bundlephobia.com/result?p=use-google-sheets) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT) [![NPM version](https://img.shields.io/npm/v/use-google-sheets)](https://www.npmjs.com/package/use-google-sheets)
 
@@ -65,6 +65,8 @@ const App = () => {
 ```
 
 ### Get data from specific sheets inside the spreadsheet
+
+Don't use single quotes on sheet names, they will be removed because when using space in sheet name it will be returned wrapped with single quotes and plugin will remove them for clean string id.
 
 ```js
 import useGoogleSheets from 'use-google-sheets';

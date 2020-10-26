@@ -1,12 +1,14 @@
 import * as React from 'react';
 
-import { mapData, makeFetch } from './utils';
+import { mapData, makeFetch, getRanges } from './utils';
 import {
   HookOptions,
   HookState,
   ActionTypes,
   Action,
   SheetsResponse,
+  SheetFromResponse,
+  ValueRangesResponse,
 } from './types';
 
 const initialState: HookState = {
@@ -14,6 +16,8 @@ const initialState: HookState = {
   error: null,
   data: [],
 };
+
+const GOOGLE_API_URL = 'https://sheets.googleapis.com/v4/spreadsheets';
 
 function reducer(state: HookState, action: Action): HookState {
   switch (action.type) {
@@ -33,28 +37,45 @@ const useGoogleSheets = ({
   sheetId,
   sheetsNames = [],
 }: HookOptions): HookState => {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}&includeGridData=true&fields=sheets(data%2FrowData%2Fvalues%2FformattedValue%2Cproperties%2Ftitle)`;
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const [sheets] = React.useState(sheetsNames);
+
+  const fetchBatchData = async () => {
+    const ranges = getRanges(sheetsNames);
+    const url = `${GOOGLE_API_URL}/${sheetId}/values:batchGet?${ranges}&key=${apiKey}`;
+    return await makeFetch(url);
+  };
+
+  const fetchOneByOneData = async () => {
+    const url = `${GOOGLE_API_URL}/${sheetId}?fields=sheets%2Fproperties%2Ftitle&key=${apiKey}`;
+    const { sheets }: SheetsResponse = await makeFetch(url);
+    const ranges = getRanges(
+      sheets.map((sheet: SheetFromResponse) => sheet.properties.title),
+    );
+    const batchUrl = `${GOOGLE_API_URL}/${sheetId}/values:batchGet?${ranges}&key=${apiKey}`;
+    return await makeFetch(batchUrl);
+  };
+
+  const fetchData = async () => {
+    try {
+      const response: ValueRangesResponse =
+        sheetsNames.length === 0
+          ? await fetchOneByOneData()
+          : await fetchBatchData();
+
+      dispatch({
+        type: ActionTypes.success,
+        payload: mapData(response.valueRanges),
+      });
+    } catch (error) {
+      dispatch({ type: ActionTypes.error, payload: error });
+    } finally {
+      dispatch({ type: ActionTypes.loading, payload: false });
+    }
+  };
 
   React.useEffect(() => {
-    async function fetchData() {
-      try {
-        const response: SheetsResponse = await makeFetch(url);
-
-        dispatch({
-          type: ActionTypes.success,
-          payload: mapData(response.sheets, sheets),
-        });
-      } catch (error) {
-        dispatch({ type: ActionTypes.error, payload: error });
-      } finally {
-        dispatch({ type: ActionTypes.loading, payload: false });
-      }
-    }
-
     fetchData();
-  }, [sheets, url]);
+  }, []);
 
   return {
     loading: state.loading,
