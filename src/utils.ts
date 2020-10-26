@@ -40,18 +40,20 @@ const mapHeader = (header: any) => {
 };
 
 const mapRecords = (records: any, headerData: any) => {
-  return records.map((record: any) => {
-    let result = {};
+  return records
+    .filter((record: any) => Object.keys(record).length > 0)
+    .map((record: any) => {
+      let result = {};
 
-    headerData.forEach((value: string, index: number) => {
-      result = {
-        [value]: record.values[index]?.formattedValue || null,
-        ...result,
-      };
+      headerData.forEach((value: string, index: number) => {
+        result = {
+          [value]: record.values?.[index]?.formattedValue || null,
+          ...result,
+        };
+      });
+
+      return result;
     });
-
-    return result;
-  });
 };
 
 const filterSheets = (
@@ -75,10 +77,10 @@ export const mapData = (
 ): Sheet[] => {
   const result = sheets.map((sheet: SheetFromResponse) => {
     const id = sheet.properties.title;
-    const firstRow = sheet.data[0].rowData;
+    const rows = sheet.data[0].rowData;
 
-    if (firstRow) {
-      const [header, ...records] = firstRow;
+    if (rows.length > 0) {
+      const [header, ...records] = rows;
       const headerData = mapHeader(header);
       const recordsData = mapRecords(records, headerData);
 
