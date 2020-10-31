@@ -9,7 +9,7 @@ export const getRanges = (
   return sheetNames.map((sheetName) => `ranges=${sheetName}`).join('&');
 };
 
-export const getSheetsTitleUrl = (sheetId: string, apiKey: string) => {
+export const getSheetsTitleUrl = (sheetId: string, apiKey: string): string => {
   return `${GOOGLE_API_URL}/${sheetId}?fields=sheets%2Fproperties%2Ftitle&key=${apiKey}`;
 };
 
@@ -17,7 +17,7 @@ export const getBatchUrl = (
   sheetId: string,
   ranges: Array<string>,
   apiKey: string,
-) => {
+): string => {
   const rangesQueryString = getRanges(ranges);
 
   return `${GOOGLE_API_URL}/${sheetId}/values:batchGet?${rangesQueryString}&key=${apiKey}`;
@@ -32,7 +32,7 @@ class ApiResponseError extends Error {
   }
 }
 
-export const makeFetch = async (url: string, config = {}) => {
+export const makeFetch = async (url: string, config = {}): Promise<any> => {
   try {
     const response = await fetch(url, config);
 
