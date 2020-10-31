@@ -1,25 +1,7 @@
 export interface HookOptions {
   apiKey: string;
   sheetId: string;
-  sheetsNames: Array<string>;
-}
-export interface ValueRange {
-  majorDimensions: string;
-  range: string;
-  values: Array<string[]>;
-}
-export interface ValueRangesResponse {
-  spreadsheetId: string;
-  valueRanges: Array<ValueRange>;
-}
-export interface PropertiesFromResponse {
-  title: string;
-}
-export interface SheetFromResponse {
-  properties: PropertiesFromResponse;
-}
-export interface SheetsResponse {
-  sheets: SheetFromResponse[];
+  sheetsNames?: Array<string>;
 }
 export interface Sheet {
   id: string;

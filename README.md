@@ -1,6 +1,6 @@
 # useGoogleSheets
 
-## A React Hook for getting data from [Google Sheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values)
+## A React Hook wrapper library for [google-sheets-mapper](https://github.com/gglukmann/google-sheets-mapper) for getting data from [Google Sheets API v4](https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values)
 
 [![Minified file size](https://img.badgesize.io/https://www.unpkg.com/use-google-sheets/dist/use-google-sheets.esm.js.svg)](https://bundlephobia.com/result?p=use-google-sheets) [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT) [![NPM version](https://img.shields.io/npm/v/use-google-sheets)](https://www.npmjs.com/package/use-google-sheets)
 
@@ -71,13 +71,11 @@ Don't use single quotes on sheet names, they will be removed because when using 
 ```js
 import useGoogleSheets from 'use-google-sheets';
 
-const sheetsNames = ['Sheet1'];
-
 const App = () => {
   const { data, loading, error } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID,
-    sheetsNames,
+    sheetsNames: ['Sheet1'],
   });
 
   if (loading) {

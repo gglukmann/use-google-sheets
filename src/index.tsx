@@ -1,15 +1,7 @@
 import * as React from 'react';
+import GoogleSheetsMapper from 'google-sheets-mapper';
 
-import { mapData, makeFetch, getBatchUrl, getSheetsTitleUrl } from './utils';
-import {
-  HookOptions,
-  HookState,
-  ActionTypes,
-  Action,
-  SheetsResponse,
-  SheetFromResponse,
-  ValueRangesResponse,
-} from './types';
+import { HookOptions, HookState, ActionTypes, Action } from './types';
 
 const initialState: HookState = {
   loading: true,
@@ -38,41 +30,24 @@ const useGoogleSheets = ({
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const sheets = React.useRef(sheetsNames);
 
-  const fetchBatchData = React.useCallback(async () => {
-    const url = getBatchUrl(sheetId, sheets.current, apiKey);
-
-    return await makeFetch(url);
-  }, [apiKey, sheetId]);
-
-  const fetchAllSheetsData = React.useCallback(async () => {
-    const url = getSheetsTitleUrl(sheetId, apiKey);
-    const { sheets }: SheetsResponse = await makeFetch(url);
-    const batchUrl = getBatchUrl(
-      sheetId,
-      sheets.map((sheet: SheetFromResponse) => sheet.properties.title),
-      apiKey,
-    );
-
-    return await makeFetch(batchUrl);
-  }, [apiKey, sheetId]);
-
   const fetchData = React.useCallback(async () => {
     try {
-      const response: ValueRangesResponse =
-        sheets.current.length === 0
-          ? await fetchAllSheetsData()
-          : await fetchBatchData();
+      const mappedData = await GoogleSheetsMapper.fetchGoogleSheetsData({
+        apiKey,
+        sheetId,
+        sheetsNames: sheets.current,
+      });
 
       dispatch({
         type: ActionTypes.success,
-        payload: mapData(response.valueRanges),
+        payload: mappedData,
       });
     } catch (error) {
       dispatch({ type: ActionTypes.error, payload: error });
     } finally {
       dispatch({ type: ActionTypes.loading, payload: false });
     }
-  }, [fetchBatchData, fetchAllSheetsData]);
+  }, [apiKey, sheetId]);
 
   React.useEffect(() => {
     fetchData();

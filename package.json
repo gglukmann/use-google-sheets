@@ -61,5 +61,8 @@
     "hooks": {
       "pre-commit": "tsdx lint"
     }
+  },
+  "dependencies": {
+    "google-sheets-mapper": "^1.0.1"
   }
 }
