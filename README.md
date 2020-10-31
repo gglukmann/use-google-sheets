@@ -20,7 +20,7 @@ Or, use **NPM**:
 npm install use-google-sheets
 ```
 
-UMD build available on [unpkg](https://www.unpkg.com/browse/use-google-sheets@1.0.0/dist/use-google-sheets.cjs.production.min.js).
+UMD build available on [unpkg](https://www.unpkg.com/browse/use-google-sheets@1.2.0/dist/use-google-sheets.cjs.production.min.js).
 
 ---
 
