@@ -2,7 +2,9 @@ import { HookOptions, Sheet, ApiResponse, ValueRange } from './types';
 
 const GOOGLE_API_URL = 'https://sheets.googleapis.com/v4/spreadsheets';
 
-export const getRanges = (sheetNames: HookOptions['sheetsNames']): string => {
+export const getRanges = (
+  sheetNames: HookOptions['sheetsNames'] = [],
+): string => {
   // ranges=Sheet1&ranges=Sheet2
   return sheetNames.map((sheetName) => `ranges=${sheetName}`).join('&');
 };
@@ -10,6 +12,7 @@ export const getRanges = (sheetNames: HookOptions['sheetsNames']): string => {
 export const getSheetsTitleUrl = (sheetId: string, apiKey: string) => {
   return `${GOOGLE_API_URL}/${sheetId}?fields=sheets%2Fproperties%2Ftitle&key=${apiKey}`;
 };
+
 export const getBatchUrl = (
   sheetId: string,
   ranges: Array<string>,

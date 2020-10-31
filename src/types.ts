@@ -1,7 +1,7 @@
 export interface HookOptions {
   apiKey: string;
   sheetId: string;
-  sheetsNames: Array<string>;
+  sheetsNames?: Array<string>;
 }
 
 export interface ValueRange {

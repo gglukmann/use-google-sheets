@@ -33,7 +33,7 @@ function reducer(state: HookState, action: Action): HookState {
 const useGoogleSheets = ({
   apiKey,
   sheetId,
-  sheetsNames,
+  sheetsNames = [],
 }: HookOptions): HookState => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const sheets = React.useRef(sheetsNames);
