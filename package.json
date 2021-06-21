@@ -1,26 +1,23 @@
 {
-  "name": "@davincilord/use-google-sheets",
+  "name": "@gglukmann/use-google-sheets",
   "description": "### A React Hook wrapper library for google-sheets-mapper for getting data from Google Sheets API v4",
-  "version": "1.3.0",
+  "version": "1.2.0",
   "author": "Gert Glükmann <gglukmann@gmail.com>",
-  "contributors": [
-    "Vincent METTON <metton.vincent@gmail.com>"
-  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/davincilord/use-google-sheets/issues"
+    "url": "https://github.com/gglukmann/use-google-sheets/issues"
   },
-  "homepage": "https://github.com/davincilord/use-google-sheets#readme",
+  "homepage": "https://github.com/gglukmann/use-google-sheets#readme",
   "directories": {
     "example": "example",
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/davincilord/use-google-sheets.git"
+    "url": "git+https://github.com/gglukmann/use-google-sheets.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/davincilord"
+    "registry": "https://npm.pkg.github.com/gglukmann"
   },
   "keywords": [
     "react",

@@ -50,10 +50,8 @@ const useGoogleSheets = ({
         type: ActionTypes.success,
         payload: mappedData,
       });
-      dispatch({ type: ActionTypes.called, payload: true });
     } catch (error) {
       dispatch({ type: ActionTypes.error, payload: error });
-      dispatch({ type: ActionTypes.called, payload: true });
     } finally {
       dispatch({ type: ActionTypes.loading, payload: false });
       dispatch({ type: ActionTypes.called, payload: true });
