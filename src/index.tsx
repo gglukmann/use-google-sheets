@@ -29,10 +29,10 @@ function reducer(state: HookState, action: Action): HookState {
 const useGoogleSheets = ({
   apiKey,
   sheetId,
-  sheetsNames = [],
+  sheetsOptions = [],
 }: HookOptions): HookState => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const sheets = React.useRef(sheetsNames);
+  const sheets = React.useRef(sheetsOptions);
 
   const fetchData = React.useCallback(async () => {
     dispatch({ type: ActionTypes.loading, payload: true });
@@ -43,7 +43,7 @@ const useGoogleSheets = ({
       const mappedData = await GoogleSheetsMapper.fetchGoogleSheetsData({
         apiKey,
         sheetId,
-        sheetsNames: sheets.current,
+        sheetsOptions: sheets.current,
       });
 
       dispatch({

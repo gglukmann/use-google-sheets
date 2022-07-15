@@ -1,7 +1,11 @@
+export interface SheetsOption {
+  id: string;
+  headerRowIndex?: number;
+}
 export interface HookOptions {
   apiKey: string;
   sheetId: string;
-  sheetsNames?: Array<string>;
+  sheetsOptions?: SheetsOption[];
 }
 export interface Sheet {
   id: string;

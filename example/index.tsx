@@ -1,18 +1,19 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom/client';
 
-import useGoogleSheets from '../.';
+import useGoogleSheets from '../src/index';
 
 const REACT_APP_GOOGLE_API_KEY = '';
-const REACT_APP_GOOGLE_SHEETS_ID = '';
+const REACT_APP_GOOGLE_SHEETS_ID =
+  '1zbEyIfga05-gXTCVGejJHpl8ZrlcTYanvgnQBa1t2DM';
 
-const sheetsNames = ['Sheet1'];
+const sheetsOptions = [{ id: 'Sheet1', headerRowIndex: 1 }, { id: 'Sheet2' }];
 
 const App = () => {
   const { data, loading, error } = useGoogleSheets({
     apiKey: REACT_APP_GOOGLE_API_KEY,
     sheetId: REACT_APP_GOOGLE_SHEETS_ID,
-    sheetsNames,
+    sheetsOptions,
   });
 
   if (loading) {
@@ -26,4 +27,5 @@ const App = () => {
   return <div>{JSON.stringify(data)}</div>;
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root')!);
+root.render(<App />);
