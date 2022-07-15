@@ -57,6 +57,6 @@
     "react": ">=17.0"
   },
   "dependencies": {
-    "google-sheets-mapper": "^1.0.1"
+    "google-sheets-mapper": "^2.0.0"
   }
 }
