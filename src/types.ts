@@ -9,7 +9,7 @@ export interface HookOptions {
 }
 export interface Sheet {
   id: string;
-  data: Array<object>;
+  data: Record<string, unknown>[];
 }
 export interface ApiResponse {
   url: string;
@@ -22,18 +22,19 @@ export interface ErrorResponse {
 export interface HookState {
   loading: boolean;
   called: boolean;
-  error: null | ErrorResponse;
+  error: ErrorResponse | Error | null;
   data: Sheet[];
   refetch: () => void;
 }
-export enum ActionTypes {
-  loading = 'LOADING',
-  error = 'ERROR',
-  success = 'SUCCESS',
-  called = 'CALLED',
-}
+export const ActionTypes = {
+  loading: "LOADING",
+  error: "ERROR",
+  success: "SUCCESS",
+  called: "CALLED",
+} as const;
+
 export type Action =
-  | { type: ActionTypes.loading; payload: HookState['loading'] }
-  | { type: ActionTypes.called; payload: HookState['called'] }
-  | { type: ActionTypes.error; payload: HookState['error'] }
-  | { type: ActionTypes.success; payload: HookState['data'] };
+  | { type: typeof ActionTypes.loading; payload: HookState["loading"] }
+  | { type: typeof ActionTypes.called; payload: HookState["called"] }
+  | { type: typeof ActionTypes.error; payload: HookState["error"] }
+  | { type: typeof ActionTypes.success; payload: HookState["data"] };

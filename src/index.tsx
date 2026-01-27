@@ -1,15 +1,16 @@
-import * as React from 'react';
-import GoogleSheetsMapper from 'google-sheets-mapper';
+import * as React from "react";
+import GoogleSheetsMapper from "google-sheets-mapper";
 
-import { HookOptions, HookState, ActionTypes, Action } from './types';
+import type { HookOptions, HookState, Action } from "./types";
+import { ActionTypes } from "./types";
 
-const initialState: HookState = {
+const initialState = {
   loading: true,
   error: null,
   data: [],
   called: false,
   refetch: () => {},
-};
+} satisfies HookState;
 
 function reducer(state: HookState, action: Action): HookState {
   switch (action.type) {
@@ -26,13 +27,13 @@ function reducer(state: HookState, action: Action): HookState {
   }
 }
 
-const useGoogleSheets = ({
-  apiKey,
-  sheetId,
-  sheetsOptions = [],
-}: HookOptions): HookState => {
+const useGoogleSheets = ({ apiKey, sheetId, sheetsOptions = [] }: HookOptions): HookState => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const sheets = React.useRef(sheetsOptions);
+  const sheetsRef = React.useRef(sheetsOptions);
+
+  React.useEffect(() => {
+    sheetsRef.current = sheetsOptions;
+  }, [sheetsOptions]);
 
   const fetchData = React.useCallback(async () => {
     dispatch({ type: ActionTypes.loading, payload: true });
@@ -43,7 +44,7 @@ const useGoogleSheets = ({
       const mappedData = await GoogleSheetsMapper.fetchGoogleSheetsData({
         apiKey,
         sheetId,
-        sheetsOptions: sheets.current,
+        sheetsOptions: sheetsRef.current,
       });
 
       dispatch({
@@ -51,7 +52,10 @@ const useGoogleSheets = ({
         payload: mappedData,
       });
     } catch (error) {
-      dispatch({ type: ActionTypes.error, payload: error });
+      dispatch({
+        type: ActionTypes.error,
+        payload: error instanceof Error ? error : (error as HookState["error"]),
+      });
     } finally {
       dispatch({ type: ActionTypes.loading, payload: false });
       dispatch({ type: ActionTypes.called, payload: true });

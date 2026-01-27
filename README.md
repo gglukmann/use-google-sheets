@@ -8,19 +8,19 @@
 
 ## Installation
 
-Package can be added using **yarn**:
-
-```bash
-yarn add use-google-sheets
-```
-
-Or, use **NPM**:
-
 ```bash
 npm install use-google-sheets
 ```
 
-UMD build available on [unpkg](https://www.unpkg.com/browse/use-google-sheets@1.2.0/dist/use-google-sheets.cjs.production.min.js).
+```bash
+pnpm add use-google-sheets
+```
+
+```bash
+bun add use-google-sheets
+```
+
+Package available on [unpkg](https://www.unpkg.com/browse/use-google-sheets/).
 
 ---
 
@@ -44,7 +44,7 @@ https://docs.google.com/spreadsheets/d/[THIS-IS-THE-SHEET-ID]/
 ### Get data from all sheets inside the spreadsheet
 
 ```js
-import useGoogleSheets from 'use-google-sheets';
+import useGoogleSheets from "use-google-sheets";
 
 const App = () => {
   const { data, loading, error } = useGoogleSheets({
@@ -69,13 +69,13 @@ const App = () => {
 Don't use single quotes on sheet names, they will be removed because when using space in sheet name it will be returned wrapped with single quotes and plugin will remove them for clean string id.
 
 ```js
-import useGoogleSheets from 'use-google-sheets';
+import useGoogleSheets from "use-google-sheets";
 
 const App = () => {
   const { data, loading, error } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID,
-    sheetsOptions: [{ id: 'Sheet1' }],
+    sheetsOptions: [{ id: "Sheet1" }],
   });
 
   if (loading) {
@@ -93,7 +93,7 @@ const App = () => {
 ### Refetch data from all sheets inside the spreadsheet
 
 ```js
-import useGoogleSheets from 'use-google-sheets';
+import useGoogleSheets from "use-google-sheets";
 
 const App = () => {
   const { data, loading, error, refetch } = useGoogleSheets({
@@ -159,10 +159,10 @@ const { data, loading, error, refetch, called } = useGoogleSheets({
 ```js
 [
   {
-    id: 'Sheet1',
+    id: "Sheet1",
     data: [
-      { key: 'language', value: 'et' },
-      { key: 'title', value: 'Test sheet' },
+      { key: "language", value: "et" },
+      { key: "title", value: "Test sheet" },
     ],
   },
 ];

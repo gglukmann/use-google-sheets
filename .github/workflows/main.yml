@@ -1,42 +1,45 @@
 name: CI
-on: [push]
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: ["20", "22"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - name: Begin CI...
-        uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Use Node 16
-        uses: actions/setup-node@v1
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 16.x
+          bun-version: latest
 
-      - name: Use cached node_modules
-        uses: actions/cache@v1
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
         with:
-          path: node_modules
-          key: nodeModules-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            nodeModules-
+          node-version: ${{ matrix.node }}
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
-        env:
-          CI: true
+        run: bun install
 
       - name: Lint
-        run: yarn lint
-        env:
-          CI: true
+        run: bun run lint
+
+      - name: Type check
+        run: bun run typecheck
 
       - name: Test
-        run: yarn test --ci --coverage --maxWorkers=2
-        env:
-          CI: true
+        run: bun run test
 
       - name: Build
-        run: yarn build
-        env:
-          CI: true
+        run: bun run build

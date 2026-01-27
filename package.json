@@ -1,62 +1,84 @@
 {
-  "name": "@gglukmann/use-google-sheets",
-  "description": "### A React Hook wrapper library for google-sheets-mapper for getting data from Google Sheets API v4",
+  "name": "use-google-sheets",
   "version": "2.0.0",
-  "author": "Gert Glükmann <gglukmann@gmail.com>",
-  "license": "MIT",
+  "description": "### A React Hook wrapper library for google-sheets-mapper for getting data from Google Sheets API v4",
+  "keywords": [
+    "google-sheets",
+    "google-sheets-api",
+    "google-sheets-api-v4",
+    "hooks",
+    "react",
+    "react-hooks"
+  ],
+  "homepage": "https://github.com/gglukmann/use-google-sheets#readme",
   "bugs": {
     "url": "https://github.com/gglukmann/use-google-sheets/issues"
   },
-  "homepage": "https://github.com/gglukmann/use-google-sheets#readme",
-  "directories": {
-    "example": "example",
-    "test": "test"
-  },
+  "license": "MIT",
+  "author": "Gert Glükmann <gglukmann@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gglukmann/use-google-sheets.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/gglukmann"
+  "directories": {
+    "example": "example",
+    "test": "test"
   },
-  "keywords": [
-    "react",
-    "hooks",
-    "react-hooks",
-    "google-sheets",
-    "google-sheets-api",
-    "google-sheets-api-v4"
-  ],
-  "module": "dist/use-google-sheets.esm.js",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
   ],
-  "engines": {
-    "node": ">=10"
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
-    "start": "tsdx watch",
+    "dev": "tsdx dev",
     "build": "tsdx build",
-    "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint src",
-    "prepare": "tsdx build"
-  },
-  "devDependencies": {
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.4.0",
-    "typescript": "^4.7.4"
-  },
-  "peerDependencies": {
-    "react": ">=17.0"
+    "test": "tsdx test",
+    "test:watch": "tsdx test --watch",
+    "lint": "tsdx lint",
+    "format": "tsdx format",
+    "format:check": "tsdx format --check",
+    "typecheck": "tsdx typecheck",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "google-sheets-mapper": "^2.0.0"
+    "google-sheets-mapper": "^2.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^25.0.10",
+    "@types/react": "^19.2.9",
+    "@types/react-dom": "^19.2.3",
+    "bunchee": "^6.9.4",
+    "jsdom": "^27.4.0",
+    "oxfmt": "^0.27.0",
+    "oxlint": "^1.42.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tsdx": "^2.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
