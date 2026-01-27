@@ -1,6 +1,6 @@
 {
   "name": "use-google-sheets",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "### A React Hook wrapper library for google-sheets-mapper for getting data from Google Sheets API v4",
   "keywords": [
     "google-sheets",
