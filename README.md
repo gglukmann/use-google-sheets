@@ -44,19 +44,19 @@ https://docs.google.com/spreadsheets/d/[THIS-IS-THE-SHEET-ID]/
 ### Get data from all sheets inside the spreadsheet
 
 ```js
-import useGoogleSheets from "use-google-sheets";
+import useGoogleSheets, { Status } from "use-google-sheets";
 
 const App = () => {
-  const { data, loading, error } = useGoogleSheets({
+  const { status, data, error } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID,
   });
 
-  if (loading) {
+  if (status === Status.pending) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
+  if (status === Status.error) {
     return <div>Error!</div>;
   }
 
@@ -69,20 +69,20 @@ const App = () => {
 Don't use single quotes on sheet names, they will be removed because when using space in sheet name it will be returned wrapped with single quotes and plugin will remove them for clean string id.
 
 ```js
-import useGoogleSheets from "use-google-sheets";
+import useGoogleSheets, { Status } from "use-google-sheets";
 
 const App = () => {
-  const { data, loading, error } = useGoogleSheets({
+  const { status, data } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID,
     sheetsOptions: [{ id: "Sheet1" }],
   });
 
-  if (loading) {
+  if (status === Status.pending) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
+  if (status === Status.error) {
     return <div>Error!</div>;
   }
 
@@ -93,19 +93,19 @@ const App = () => {
 ### Refetch data from all sheets inside the spreadsheet
 
 ```js
-import useGoogleSheets from "use-google-sheets";
+import useGoogleSheets, { Status } from "use-google-sheets";
 
 const App = () => {
-  const { data, loading, error, refetch } = useGoogleSheets({
+  const { status, data, refetch } = useGoogleSheets({
     apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     sheetId: process.env.REACT_APP_GOOGLE_SHEETS_ID,
   });
 
-  if (loading) {
+  if (status === Status.pending) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
+  if (status === Status.error) {
     return <div>Error!</div>;
   }
 
@@ -140,20 +140,25 @@ The `useGoogleSheets` hook takes an object with three properties:
 The hook produces an `HookState` object:
 
 ```js
-const { data, loading, error, refetch, called } = useGoogleSheets({
+const { status, data, error, refetch, loading } = useGoogleSheets({
   apiKey,
   sheetId,
 });
 ```
 
-| Name    | Value          |
-| ------- | -------------- |
-| data    | array          |
-| loading | boolean        |
-| error   | null or object |
-| refetch | function       |
-| called  | boolean        |
+| Name    | Value                                   |
+| ------- | --------------------------------------- |
+| status  | `"pending"` \| `"success"` \| `"error"` |
+| data    | array                                   |
+| error   | null or object                          |
+| refetch | function                                |
+| loading | boolean (deprecated, use `status`)      |
 
+- `status` indicates the current state of the request:
+  - `pending` - request is in-flight
+  - `success` - data received successfully
+  - `error` - request failed
+- `loading` is `true` when `status === "pending"` (deprecated).
 - `data` is an array of mapped data objects.
 
 ```js
@@ -168,7 +173,6 @@ const { data, loading, error, refetch, called } = useGoogleSheets({
 ];
 ```
 
-- `loading` lets you know whether data is being fetched and mapped.
 - `error` lets you know when there is something wrong. It returns an error object where you can get specific error properties from `error.response`
 
 ```js
@@ -178,6 +182,24 @@ const { data, loading, error, refetch, called } = useGoogleSheets({
   url: 'https://sheets.googleapis.com/v4/spreadsheets/...',
 }
 ```
+
+### Status Constant
+
+Import the `Status` constant for status comparisons:
+
+```js
+import { Status } from "use-google-sheets";
+
+Status.pending; // "pending"
+Status.success; // "success"
+Status.error; // "error"
+```
+
+## Migration from v2 to v3
+
+- New `status` field: `"pending"` | `"success"` | `"error"` (aligned with [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/reference/useQuery))
+- `loading` is still available but deprecated (use `status === "pending"`)
+- `called` has been removed
 
 ## Migration from v1 to v2
 

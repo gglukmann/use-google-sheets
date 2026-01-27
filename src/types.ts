@@ -2,7 +2,7 @@ export interface SheetsOption {
   id: string;
   headerRowIndex?: number;
 }
-export interface HookOptions {
+export interface UseGoogleSheetsOptions {
   apiKey: string;
   sheetId: string;
   sheetsOptions?: SheetsOption[];
@@ -11,30 +11,25 @@ export interface Sheet {
   id: string;
   data: Record<string, unknown>[];
 }
-export interface ApiResponse {
-  url: string;
-  status: number;
-  statusText: string;
-}
-export interface ErrorResponse {
-  response: ApiResponse;
-}
-export interface HookState {
+
+export const Status = {
+  pending: "pending",
+  success: "success",
+  error: "error",
+} as const;
+
+export type StatusType = (typeof Status)[keyof typeof Status];
+
+export interface UseGoogleSheetsState {
+  status: StatusType;
+  /** @deprecated Use `status === "pending"` instead */
   loading: boolean;
-  called: boolean;
-  error: ErrorResponse | Error | null;
+  error: Error | null;
   data: Sheet[];
   refetch: () => void;
 }
-export const ActionTypes = {
-  loading: "LOADING",
-  error: "ERROR",
-  success: "SUCCESS",
-  called: "CALLED",
-} as const;
 
 export type Action =
-  | { type: typeof ActionTypes.loading; payload: HookState["loading"] }
-  | { type: typeof ActionTypes.called; payload: HookState["called"] }
-  | { type: typeof ActionTypes.error; payload: HookState["error"] }
-  | { type: typeof ActionTypes.success; payload: HookState["data"] };
+  | { type: typeof Status.pending }
+  | { type: typeof Status.error; payload: UseGoogleSheetsState["error"] }
+  | { type: typeof Status.success; payload: UseGoogleSheetsState["data"] };

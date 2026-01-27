@@ -1,33 +1,48 @@
 import * as React from "react";
 import GoogleSheetsMapper from "google-sheets-mapper";
 
-import type { HookOptions, HookState, Action } from "./types";
-import { ActionTypes } from "./types";
+import type { UseGoogleSheetsOptions, UseGoogleSheetsState, Action } from "./types";
+import { Status } from "./types";
 
-const initialState = {
-  loading: true,
+export type {
+  UseGoogleSheetsOptions,
+  UseGoogleSheetsState,
+  Sheet,
+  SheetsOption,
+  StatusType,
+} from "./types";
+export { Status } from "./types";
+
+interface InternalState {
+  status: UseGoogleSheetsState["status"];
+  error: UseGoogleSheetsState["error"];
+  data: UseGoogleSheetsState["data"];
+}
+
+const initialState: InternalState = {
+  status: Status.pending,
   error: null,
   data: [],
-  called: false,
-  refetch: () => {},
-} satisfies HookState;
+};
 
-function reducer(state: HookState, action: Action): HookState {
+function reducer(state: InternalState, action: Action): InternalState {
   switch (action.type) {
-    case ActionTypes.loading:
-      return { ...state, loading: action.payload };
-    case ActionTypes.error:
-      return { ...state, error: action.payload };
-    case ActionTypes.success:
-      return { ...state, data: action.payload };
-    case ActionTypes.called:
-      return { ...state, called: action.payload };
+    case Status.pending:
+      return { ...state, status: Status.pending, error: null };
+    case Status.success:
+      return { status: Status.success, error: null, data: action.payload };
+    case Status.error:
+      return { ...state, status: Status.error, error: action.payload };
     default:
       return state;
   }
 }
 
-const useGoogleSheets = ({ apiKey, sheetId, sheetsOptions = [] }: HookOptions): HookState => {
+const useGoogleSheets = ({
+  apiKey,
+  sheetId,
+  sheetsOptions = [],
+}: UseGoogleSheetsOptions): UseGoogleSheetsState => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const sheetsRef = React.useRef(sheetsOptions);
 
@@ -36,10 +51,7 @@ const useGoogleSheets = ({ apiKey, sheetId, sheetsOptions = [] }: HookOptions): 
   }, [sheetsOptions]);
 
   const fetchData = React.useCallback(async () => {
-    dispatch({ type: ActionTypes.loading, payload: true });
-    dispatch({ type: ActionTypes.called, payload: false });
-    dispatch({ type: ActionTypes.error, payload: null });
-    dispatch({ type: ActionTypes.success, payload: [] });
+    dispatch({ type: Status.pending });
     try {
       const mappedData = await GoogleSheetsMapper.fetchGoogleSheetsData({
         apiKey,
@@ -47,37 +59,25 @@ const useGoogleSheets = ({ apiKey, sheetId, sheetsOptions = [] }: HookOptions): 
         sheetsOptions: sheetsRef.current,
       });
 
-      dispatch({
-        type: ActionTypes.success,
-        payload: mappedData,
-      });
+      dispatch({ type: Status.success, payload: mappedData });
     } catch (error) {
       dispatch({
-        type: ActionTypes.error,
-        payload: error instanceof Error ? error : (error as HookState["error"]),
+        type: Status.error,
+        payload: error instanceof Error ? error : (error as UseGoogleSheetsState["error"]),
       });
-    } finally {
-      dispatch({ type: ActionTypes.loading, payload: false });
-      dispatch({ type: ActionTypes.called, payload: true });
     }
   }, [apiKey, sheetId]);
-
-  const refetch = React.useCallback(() => {
-    if (state.called) {
-      fetchData();
-    }
-  }, [fetchData, state.called]);
 
   React.useEffect(() => {
     fetchData();
   }, [fetchData]);
 
   return {
-    loading: state.loading,
+    status: state.status,
+    loading: state.status === Status.pending,
     error: state.error,
     data: state.data,
-    called: state.called,
-    refetch,
+    refetch: fetchData,
   };
 };
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import useGoogleSheets from "../src";
+import useGoogleSheets, { Status } from "../src";
 
 vi.mock("google-sheets-mapper", () => ({
   default: {
@@ -17,7 +17,7 @@ describe("useGoogleSheets", () => {
     vi.clearAllMocks();
   });
 
-  it("returns initial loading state", () => {
+  it("returns pending state initially", () => {
     mockFetch.mockImplementation(() => new Promise(() => {}));
 
     const { result } = renderHook(() =>
@@ -27,10 +27,10 @@ describe("useGoogleSheets", () => {
       }),
     );
 
+    expect(result.current.status).toBe(Status.pending);
     expect(result.current.loading).toBe(true);
     expect(result.current.data).toEqual([]);
     expect(result.current.error).toBeNull();
-    expect(result.current.called).toBe(false);
   });
 
   it("fetches data successfully", async () => {
@@ -45,12 +45,12 @@ describe("useGoogleSheets", () => {
     );
 
     await waitFor(() => {
-      expect(result.current.loading).toBe(false);
+      expect(result.current.status).toBe(Status.success);
     });
 
+    expect(result.current.loading).toBe(false);
     expect(result.current.data).toEqual(mockData);
     expect(result.current.error).toBeNull();
-    expect(result.current.called).toBe(true);
   });
 
   it("handles errors", async () => {
@@ -65,12 +65,11 @@ describe("useGoogleSheets", () => {
     );
 
     await waitFor(() => {
-      expect(result.current.loading).toBe(false);
+      expect(result.current.status).toBe(Status.error);
     });
 
+    expect(result.current.loading).toBe(false);
     expect(result.current.error).toEqual(mockError);
-    expect(result.current.data).toEqual([]);
-    expect(result.current.called).toBe(true);
   });
 
   it("passes sheetsOptions to the mapper", async () => {
@@ -105,7 +104,7 @@ describe("useGoogleSheets", () => {
     );
 
     await waitFor(() => {
-      expect(result.current.called).toBe(true);
+      expect(result.current.status).toBe(Status.success);
     });
 
     expect(mockFetch).toHaveBeenCalledTimes(1);
